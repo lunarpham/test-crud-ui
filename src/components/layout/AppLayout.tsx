@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { sidebarVisibility } from "~/lib/hooks/useSidebar";
 import Sidebar from "./Sidebar";
 
@@ -8,11 +8,18 @@ interface AppLayoutProps {
 
 export default function AppLayout({ children }: AppLayoutProps) {
   const { showSidebar } = sidebarVisibility();
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <main className={showSidebar ? "flex" : ""}>
-      {showSidebar && <Sidebar className="h-screen z-50" />}
-      <div className="flex-1">{children}</div>
+    <main>
+      {showSidebar && <Sidebar className="z-50" collapsed={collapsed} />}
+      <div
+        className={`min-h-screen ${
+          showSidebar ? (collapsed ? "ml-16" : "ml-64") : ""
+        }`}
+      >
+        {children}
+      </div>
     </main>
   );
 }

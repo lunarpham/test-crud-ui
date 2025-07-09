@@ -6,15 +6,9 @@ import { useAuthContext } from "~/lib/contexts/authContext";
 
 interface SidebarProps {
   className?: string;
-  collapsed?: boolean;
-  onToggle?: () => void;
 }
 
-export default function Sidebar({
-  className = "",
-  collapsed = false,
-  onToggle,
-}: SidebarProps) {
+export default function Sidebar({ className = "" }: SidebarProps) {
   const location = useLocation();
   const { user } = useAuthContext();
 
@@ -38,12 +32,10 @@ export default function Sidebar({
 
   return (
     <aside
-      className={`h-full p-4 flex flex-col justify-between bg-white border-r border-gray-200 transition-all duration-300 ${
-        collapsed ? "w-16" : "w-64"
-      } ${className}`}
+      className={`fixed left-0 top-0 h-screen p-4 flex flex-col justify-between bg-white border-r border-gray-200 transition-all duration-300 w-64 ${className}`}
     >
       <div>
-        <h1>API Manager</h1>
+        <h1 className="p-4 font-bold text-indigo-900">API Manager</h1>
         <div className="space-y-2 w-full">
           {navItems.map((item) => (
             <Link
@@ -56,7 +48,7 @@ export default function Sidebar({
               }`}
             >
               {item.icon}
-              {!collapsed && <span className="text-sm">{item.label}</span>}
+              <span>{item.label}</span>
             </Link>
           ))}
         </div>
@@ -69,14 +61,12 @@ export default function Sidebar({
           <div className="w-10 h-10 flex items-center justify-center bg-gray-200 rounded-full">
             <User size={24} className="text-gray-500" />
           </div>
-          {!collapsed && (
-            <div className="text-xs">
-              <p className="font-semibold">{user?.name || "Guest"}</p>
-              <p className="text-gray-500">
-                {user?.email || "guest@example.com"}
-              </p>
-            </div>
-          )}
+          <div className="text-xs">
+            <p className="font-semibold">{user?.name || "Guest"}</p>
+            <p className="text-gray-500">
+              {user?.email || "guest@example.com"}
+            </p>
+          </div>
         </Link>
       </div>
     </aside>

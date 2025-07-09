@@ -9,6 +9,7 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 import { AuthProvider } from "./lib/contexts/authContext";
+import { Toaster } from "react-hot-toast";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -19,7 +20,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body suppressHydrationWarning={true}>
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -31,6 +32,26 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <AuthProvider>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: "#363636",
+            color: "#fff",
+          },
+          success: {
+            style: {
+              background: "#059669",
+            },
+          },
+          error: {
+            style: {
+              background: "#dc2626",
+            },
+          },
+        }}
+      />
       <AppContent />
     </AuthProvider>
   );

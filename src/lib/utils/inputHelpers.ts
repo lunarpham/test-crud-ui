@@ -1,11 +1,8 @@
 export const normalizeInput = (input: string): string => {
   if (!input) return "";
 
-  // First trim the input
-  const trimmed = input.trim();
-
-  // Replace multiple spaces with a single space
-  return trimmed.replace(/\s+/g, " ");
+  const collapsed = input.replace(/\s{2,}/g, " ");
+  return collapsed.trim();
 };
 
 export const validateEmail = (
@@ -17,7 +14,6 @@ export const validateEmail = (
     return { isValid: false, error: "Email is required" };
   }
 
-  // RFC 5322 compliant email regex
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   if (!emailRegex.test(normalized)) {
@@ -41,7 +37,6 @@ export const validatePassword = (
     };
   }
 
-  // Check for allowed characters (alphanumeric and common symbols)
   const passwordRegex = /^[a-zA-Z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]*$/;
   if (!passwordRegex.test(password)) {
     return { isValid: false, error: "Password contains invalid characters" };
@@ -54,24 +49,24 @@ export const validateInput = (
   type: "email" | "password" | "text",
   value: string
 ): { value: string; isValid: boolean; error?: string } => {
-  const normalizedValue = normalizeInput(value);
-
   switch (type) {
     case "email":
-      const emailValidation = validateEmail(normalizedValue);
-      return { ...emailValidation, value: normalizedValue };
+      const normalizedEmail = normalizeInput(value);
+      const emailValidation = validateEmail(normalizedEmail);
+      return { ...emailValidation, value: normalizedEmail };
 
     case "password":
-      const passwordValidation = validatePassword(value); // Don't normalize passwords
-      return { ...passwordValidation, value }; // Return original password to preserve spaces
+      const passwordValidation = validatePassword(value);
+      return { ...passwordValidation, value };
 
     case "text":
-      return { isValid: true, value: normalizedValue };
+      const normalizedText = normalizeInput(value);
+      return { isValid: true, value: normalizedText };
 
     default:
       return {
         isValid: false,
-        value: normalizedValue,
+        value: normalizeInput(value),
         error: "Unknown input type",
       };
   }

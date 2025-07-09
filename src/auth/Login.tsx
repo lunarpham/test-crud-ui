@@ -2,8 +2,10 @@ import type { Route } from "../+types/root";
 import { Mail, Lock } from "lucide-react";
 import { useAuth } from "~/lib/hooks/useAuth";
 import { useState } from "react";
-import { validateInput } from "~/lib/utils/inputHelpers";
+import { validateInput, normalizeInput } from "~/lib/utils/inputHelpers";
+import { handleApiError } from "~/lib/utils/errorHandler";
 import { Constants } from "~/lib/constants";
+import Input from "~/components/ui/Input";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -17,20 +19,26 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Login() {
   const { login, isLoading } = useAuth();
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [serverError, setServerError] = useState<string>("");
+
+  const handleInputChange = (field: "email" | "password", value: string) => {
+    // Store raw input without normalization
+    setFormData((prev) => ({ ...prev, [field]: value }));
+
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: "" }));
+    }
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const emailInput = formData.get("email") as string;
-    const passwordInput = formData.get("password") as string;
 
-    setServerError("");
-
-    // Validate inputs
-    const emailResult = validateInput("email", emailInput);
-    const passwordResult = validateInput("password", passwordInput);
+    // Validate inputs with normalized values
+    const normalizedEmail = normalizeInput(formData.email);
+    const emailResult = validateInput("email", normalizedEmail);
+    const passwordResult = validateInput("password", formData.password);
 
     // Collect validation errors
     const newErrors: Record<string, string> = {};
@@ -46,86 +54,57 @@ export default function Login() {
         await login(emailResult.value, passwordResult.value);
         window.location.href = Constants.Routes.DASHBOARD();
       } catch (error: any) {
-        if (error.response) {
-          const status = error.response.status;
-          switch (status) {
-            case 404:
-              setServerError("User not found. Please check your email.");
-              break;
-            case 500:
-              setServerError("Internal server error. Please try again later.");
-              break;
-            default:
-              setServerError("An unexpected error occurred. Please try again.");
-          }
-        } else if (error.request) {
-          setServerError("Network error. Please check your connection.");
-        } else {
-          setServerError("An error occurred: " + error.message);
-        }
+        handleApiError(error);
       }
     }
   };
 
   return (
     <>
-      <div className="flex h-screen w-full items-center justify-center bg-gradient-to-r from-blue-200 to-cyan-200">
-        <div className="w-96 border p-6 shadow-lg bg-white">
+      <div className="flex h-screen w-full items-center justify-center bg-gray-200">
+        <div className="w-96 border p-6 shadow-lg bg-white rounded-xl">
           <h1 className="text-2xl font-bold mb-4 text-center uppercase">
             Login
           </h1>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4 grid grid-cols-12 items-center gap-10 p-4 bg-neutral-200">
-              <div className="col-span-1">
-                <Mail size={20} className="text-neutral-700" />
-              </div>
-              <div className="col-span-11">
-                <input
-                  placeholder="Email"
-                  type="email"
-                  id="email"
-                  name="email"
-                  className="h-full focus:outline-none"
-                  required
-                />
-              </div>
-            </div>
-            <div className="mb-8 grid grid-cols-12 items-center gap-10 p-4 bg-neutral-200">
-              <div className="col-span-1">
-                <Lock size={20} className="text-neutral-700" />
-              </div>
-              <div className="col-span-11">
-                <input
-                  placeholder="Password"
-                  type="password"
-                  id="password"
-                  name="password"
-                  className="h-full focus:outline-none"
-                  required
-                />
-              </div>
-            </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Input
+              variant="email"
+              name="email"
+              id="email"
+              value={formData.email}
+              onChange={(e) => handleInputChange("email", e.target.value)}
+              error={errors.email}
+              required
+            />
+            <Input
+              variant="password"
+              name="password"
+              id="password"
+              value={formData.password}
+              onChange={(e) => handleInputChange("password", e.target.value)}
+              error={errors.password}
+              required
+            />
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-cyan-800 text-white py-4 uppercase font-semibold hover:bg-cyan-900 transition-colors cursor-pointer"
+              className="w-full rounded-lg bg-violet-800 text-white py-4 uppercase font-semibold hover:bg-violet-900 transition-colors cursor-pointer"
             >
               Login
             </button>
-
-            {serverError && (
-              <div className="mt-4 text-red-600 text-sm">
-                <p className="text-red-600 text-sm">{serverError}</p>
-              </div>
-            )}
-            {Object.keys(errors).length > 0 && (
-              <div className="mt-4 text-red-600 text-sm">
-                {Object.values(errors).map((error, index) => (
-                  <p key={index}>{error}</p>
-                ))}
-              </div>
-            )}
           </form>
+
+          <div className="mt-4 text-center">
+            <p className="text-sm text-gray-600">
+              Don't have an account?{" "}
+              <a
+                href={Constants.Routes.REGISTER()}
+                className="text-cyan-800 hover:underline"
+              >
+                Register here
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </>
