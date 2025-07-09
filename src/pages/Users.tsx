@@ -3,7 +3,7 @@ import AppLayout from "../components/layout/AppLayout";
 import Input from "~/components/ui/Input";
 import UserFormModal, { UserFormData } from "~/components/layout/UserModal";
 import ConfirmationModal from "~/components/layout/ConfirmModal";
-import { handleApiError, showSuccess } from "~/lib/utils/errorHandler";
+import { handleApiError } from "~/lib/utils/errorHandler";
 import { Pencil, Trash2, UserRoundPlus } from "lucide-react";
 import { useUser } from "~/lib/hooks/useUser";
 import { useState } from "react";
@@ -130,8 +130,9 @@ export default function Users() {
 
           <button
             onClick={handleAddUser}
-            className="px-4 py-2 bg-violet-800 text-white rounded-lg hover:bg-violet-900 transition-colors"
+            className="px-6 py-3 bg-sky-800 text-white rounded-full hover:bg-sky-900 transition-colors inline-flex items-center gap-2 cursor-pointer uppercase font-semibold"
           >
+            <UserRoundPlus size={20} />
             Add User
           </button>
         </div>

@@ -8,16 +8,11 @@ interface AppLayoutProps {
 
 export default function AppLayout({ children }: AppLayoutProps) {
   const { showSidebar } = sidebarVisibility();
-  const [collapsed, setCollapsed] = useState(false);
 
   return (
     <main>
-      {showSidebar && <Sidebar className="z-50" collapsed={collapsed} />}
-      <div
-        className={`min-h-screen ${
-          showSidebar ? (collapsed ? "ml-16" : "ml-64") : ""
-        }`}
-      >
+      {showSidebar && <Sidebar className="z-50" />}
+      <div className={`min-h-screen ${showSidebar ? "ml-64" : ""}`}>
         {children}
       </div>
     </main>

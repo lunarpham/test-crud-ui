@@ -3,6 +3,7 @@ import Modal from "../ui/Modal";
 import Input from "../ui/Input";
 import { User } from "~/lib/types/userTypes";
 import { validateInput, normalizeInput } from "~/lib/utils/inputHelpers";
+import { X, Check } from "lucide-react";
 
 interface UserFormModalProps {
   isOpen: boolean;
@@ -39,7 +40,6 @@ export default function UserFormModal({
 
   const isEditMode = !!user;
 
-  // Reset form when modal opens/closes or user changes
   useEffect(() => {
     if (isOpen) {
       if (user) {
@@ -54,7 +54,7 @@ export default function UserFormModal({
           name: "",
           email: "",
           age: undefined,
-          password: "",
+          password: "mypassword123", // Default password for new users
         });
       }
       setErrors({});
@@ -65,7 +65,6 @@ export default function UserFormModal({
   const handleInputChange = (field: keyof UserFormData, value: string) => {
     let processedValue: string | number | undefined = value;
 
-    // Only convert age to number, no normalization
     if (field === "age") {
       processedValue = value ? parseInt(value) : undefined;
     }
@@ -75,7 +74,6 @@ export default function UserFormModal({
       [field]: processedValue,
     }));
 
-    // Clear error for this field when user starts typing
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: "" }));
     }
@@ -84,25 +82,15 @@ export default function UserFormModal({
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    // Basic validation for required fields without strict normalization
     if (!formData.name || formData.name.trim() === "") {
       newErrors.name = "Name is required";
     }
 
-    // Basic email format validation
     const emailResult = validateInput("email", formData.email);
     if (!emailResult.isValid) {
       newErrors.email = emailResult.error!;
     }
 
-    if (!isEditMode) {
-      const passwordResult = validateInput("password", formData.password || "");
-      if (!passwordResult.isValid) {
-        newErrors.password = passwordResult.error!;
-      }
-    }
-
-    // Validate age (optional)
     if (
       formData.age !== undefined &&
       (formData.age <= 0 || formData.age > 150)
@@ -175,15 +163,12 @@ export default function UserFormModal({
         />
 
         {!isEditMode && (
-          <Input
-            variant="password"
-            name="password"
-            label="Password"
-            value={formData.password || ""}
-            onChange={(e) => handleInputChange("password", e.target.value)}
-            error={errors.password}
-            required
-          />
+          <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded">
+            <p className="text-sm">
+              <strong>Note:</strong> New users will be assigned the default
+              password: "mypassword123"
+            </p>
+          </div>
         )}
 
         {serverError && (
@@ -196,15 +181,17 @@ export default function UserFormModal({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
+            className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors inline-flex items-center gap-2 cursor-pointer"
           >
+            <X size={16} />
             Cancel
           </button>
           <button
             type="submit"
             disabled={isLoading}
-            className="px-4 py-2 bg-violet-800 text-white rounded-lg hover:bg-violet-900 transition-colors disabled:bg-violet-400"
+            className="px-4 py-2 bg-sky-800 text-white rounded-lg hover:bg-sky-900 transition-colors disabled:bg-violet-400 inline-flex items-center gap-2 cursor-pointer"
           >
+            <Check size={16} />
             {isLoading
               ? "Saving..."
               : isEditMode

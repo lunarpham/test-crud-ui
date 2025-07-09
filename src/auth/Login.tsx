@@ -23,10 +23,8 @@ export default function Login() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleInputChange = (field: "email" | "password", value: string) => {
-    // Store raw input without normalization
     setFormData((prev) => ({ ...prev, [field]: value }));
 
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: "" }));
     }
@@ -35,26 +33,24 @@ export default function Login() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Validate inputs with normalized values
     const normalizedEmail = normalizeInput(formData.email);
     const emailResult = validateInput("email", normalizedEmail);
     const passwordResult = validateInput("password", formData.password);
 
-    // Collect validation errors
     const newErrors: Record<string, string> = {};
     if (!emailResult.isValid) newErrors.email = emailResult.error!;
     if (!passwordResult.isValid) newErrors.password = passwordResult.error!;
 
-    // Update error state
     setErrors(newErrors);
 
-    // If valid, proceed with login
     if (Object.keys(newErrors).length === 0) {
       try {
         await login(emailResult.value, passwordResult.value);
+        // Only navigate if login was successful (no exception thrown)
         window.location.href = Constants.Routes.DASHBOARD();
       } catch (error: any) {
         handleApiError(error);
+        setErrors({ general: "Invalid email or password. Please try again." });
       }
     }
   };
@@ -67,6 +63,11 @@ export default function Login() {
             Login
           </h1>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {errors.general && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                {errors.general}
+              </div>
+            )}
             <Input
               variant="email"
               name="email"
@@ -88,7 +89,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full rounded-lg bg-violet-800 text-white py-4 uppercase font-semibold hover:bg-violet-900 transition-colors cursor-pointer"
+              className="w-full rounded-lg bg-sky-800 text-white py-4 uppercase font-semibold hover:bg-sky-900 transition-colors cursor-pointer"
             >
               Login
             </button>

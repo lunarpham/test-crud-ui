@@ -184,14 +184,14 @@ export default function Profile() {
                 <>
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="flex items-center gap-2 px-4 py-2 bg-violet-800 text-white rounded-lg hover:bg-violet-900 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-indigo-100 border border-indigo-300 text-sky-800 rounded-lg hover:bg-indigo-200 transition-colors cursor-pointer"
                   >
                     <Pencil size={16} />
-                    Edit Profile
+                    Edit
                   </button>
                   <button
                     onClick={handleLogout}
-                    className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-red-100 border border-red-300 text-rose-800 rounded-lg hover:bg-red-200 transition-colors cursor-pointer"
                   >
                     <LogOut size={16} />
                     Logout
@@ -202,7 +202,7 @@ export default function Profile() {
                   <button
                     onClick={handleSave}
                     disabled={isLoading}
-                    className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:bg-green-400"
+                    className="flex items-center gap-2 px-4 py-2 bg-emerald-100 border border-emerald-300 text-green-800 rounded-lg hover:bg-emerald-200 transition-colors cursor-pointer"
                   >
                     <Save size={16} />
                     {isLoading ? "Saving..." : "Save"}
@@ -210,7 +210,7 @@ export default function Profile() {
                   <button
                     onClick={handleCancel}
                     disabled={isLoading}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 border border-gray-300 text-gray-800 rounded-lg hover:bg-neutral-200 transition-colors cursor-pointer"
                   >
                     <X size={16} />
                     Cancel

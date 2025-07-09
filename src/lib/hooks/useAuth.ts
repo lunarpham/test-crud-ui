@@ -61,8 +61,6 @@ export function useAuth(): AuthContextType {
       setUser(authUser);
       setIsAuthenticated(true);
       localStorage.setItem("auth_token", authToken);
-
-      // The AuthProvider will handle the redirect based on stored path
     } catch (error) {
       console.error("Login failed:", error);
       throw error;

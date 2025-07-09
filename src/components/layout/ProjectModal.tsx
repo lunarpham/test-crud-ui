@@ -5,6 +5,7 @@ import Select from "../ui/Select";
 import { Project } from "~/lib/hooks/useProject";
 import { User } from "~/lib/types/userTypes";
 import { normalizeInput } from "~/lib/utils/inputHelpers";
+import { X, Check } from "lucide-react";
 
 interface ProjectFormModalProps {
   isOpen: boolean;
@@ -258,15 +259,17 @@ export default function ProjectFormModal({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
+            className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors inline-flex items-center gap-2 cursor-pointer"
           >
+            <X size={16} />
             Cancel
           </button>
           <button
             type="submit"
             disabled={isLoading}
-            className="px-4 py-2 bg-violet-800 text-white rounded-lg hover:bg-violet-900 transition-colors disabled:bg-violet-400"
+            className="px-4 py-2 bg-sky-800 text-white rounded-lg hover:bg-sky-900 transition-colors disabled:bg-violet-400 inline-flex items-center gap-2 cursor-pointer"
           >
+            <Check size={16} />
             {isLoading
               ? "Saving..."
               : isEditMode
