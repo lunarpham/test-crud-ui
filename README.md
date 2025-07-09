@@ -1,87 +1,96 @@
-# Welcome to React Router!
+# User/Project Management Dashboard
 
-A modern, production-ready template for building full-stack React applications using React Router.
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+A web application for managing users and projects with full CRUD operations, built with React, TypeScript, and Tailwind CSS.
 
 ## Features
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+- **User Management**: Create, read, update, and delete users
+- **Project Management**: Full CRUD operations for projects with user assignments
+- **Authentication**: Login/register system with profile management
+- **Authorization**: CRUD operations require authorized access
+
+## Tech Stack
+
+- **Frontend**: React 19, TypeScript, React Router v7
+- **Styling**: Tailwind CSS with custom design system
+- **Build Tool**: Vite
+- **Icons**: Lucide React
+
+## Project Structure
+
+```
+src/
+├── auth/                   # Authentication components
+├── components/
+│   ├── layout/            # Layout components (Sidebar, Modals)
+│   └── ui/                # Reusable UI components
+├── lib/
+│   ├── contexts/          # React contexts (Auth)
+│   ├── hooks/             # Custom hooks (useUser, useProject)
+│   ├── types/             # TypeScript type definitions
+│   ├── utils/             # Utility functions
+│   └── constants/         # App constants and routes
+└── pages/                 # Page components
+```
 
 ## Getting Started
 
-### Installation
+### Prerequisites
 
-Install the dependencies:
+- Node.js 20+
+- npm or yarn
 
-```bash
-npm install
-```
+### Local Development
 
-### Development
+1. **Clone the repository**
 
-Start the development server with HMR:
+   ```bash
+   git clone <repository-url>
+   cd test-crud-ui
+   ```
 
-```bash
-npm run dev
-```
+2. **Install dependencies**
 
-Your application will be available at `http://localhost:5173`.
+   ```bash
+   npm install
+   ```
 
-## Building for Production
+3. **Set up environment variables**
 
-Create a production build:
+   ```bash
+   # Create .env file
+   VITE_API_BASE_URL=http://localhost:8080/api/v1
+   ```
 
-```bash
-npm run build
-```
+4. **Start development server**
 
-## Deployment
+   ```bash
+   npm run dev
+   ```
 
-### Docker Deployment
+5. **Open your browser**
+   ```
+   http://localhost:5173
+   ```
 
-To build and run using Docker:
+## API Integration
 
-```bash
-docker build -t my-app .
+The application connects to a REST API with the following endpoints:
 
-# Run the container
-docker run -p 3000:3000 my-app
-```
+- `GET /api/v1/users` - List users
+- `POST /api/v1/users` - Create user
+- `PUT /api/v1/users/:id` - Update user
+- `DELETE /api/v1/users/:id` - Delete user
+- `GET /api/v1/projects` - List projects
+- `POST /api/v1/projects` - Create project
+- `PUT /api/v1/projects/:id` - Update project
+- `DELETE /api/v1/projects/:id` - Delete project
 
-The containerized application can be deployed to any platform that supports Docker, including:
+## Key Components
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
+### Authentication
 
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+- Login/Register forms
+- Protected routes
+- User profile management
+- Session handling
