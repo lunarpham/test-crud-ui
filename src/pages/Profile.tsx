@@ -127,7 +127,6 @@ export default function Profile() {
       if (result.user) {
         setIsEditing(false);
         setFormData((prev) => ({ ...prev, password: "" })); // Clear password field
-        showSuccess("Profile updated successfully!");
       }
     } catch (error) {
       handleApiError(error);
@@ -169,29 +168,29 @@ export default function Profile() {
       <div className="p-8 max-w-2xl mx-auto">
         <div className="bg-white rounded-lg shadow-lg p-6">
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col items-center gap-4 justify-between md:flex-row mb-6">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 bg-violet-100 rounded-full flex items-center justify-center">
-                <User size={32} className="text-violet-600" />
+                <User className="text-violet-600" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Profile</h1>
                 <p className="text-gray-600">Manage your account information</p>
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 w-full md:w-auto">
               {!isEditing ? (
                 <>
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="flex items-center gap-2 px-4 py-2 bg-indigo-100 border border-indigo-300 text-sky-800 rounded-lg hover:bg-indigo-200 transition-colors cursor-pointer"
+                    className="flex items-center justify-center w-1/2 gap-2 px-4 py-2 bg-indigo-100 border border-indigo-300 text-sky-800 rounded-lg hover:bg-indigo-200 transition-colors cursor-pointer"
                   >
                     <Pencil size={16} />
                     Edit
                   </button>
                   <button
                     onClick={handleLogout}
-                    className="flex items-center gap-2 px-4 py-2 bg-red-100 border border-red-300 text-rose-800 rounded-lg hover:bg-red-200 transition-colors cursor-pointer"
+                    className="flex items-center justify-center w-1/2 gap-2 px-4 py-2 bg-red-100 border border-red-300 text-rose-800 rounded-lg hover:bg-red-200 transition-colors cursor-pointer"
                   >
                     <LogOut size={16} />
                     Logout
@@ -202,7 +201,7 @@ export default function Profile() {
                   <button
                     onClick={handleSave}
                     disabled={isLoading}
-                    className="flex items-center gap-2 px-4 py-2 bg-emerald-100 border border-emerald-300 text-green-800 rounded-lg hover:bg-emerald-200 transition-colors cursor-pointer"
+                    className="flex items-center justify-center w-1/2 gap-2 px-4 py-2 bg-emerald-100 border border-emerald-300 text-green-800 rounded-lg hover:bg-emerald-200 transition-colors cursor-pointer"
                   >
                     <Save size={16} />
                     {isLoading ? "Saving..." : "Save"}
@@ -210,7 +209,7 @@ export default function Profile() {
                   <button
                     onClick={handleCancel}
                     disabled={isLoading}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 border border-gray-300 text-gray-800 rounded-lg hover:bg-neutral-200 transition-colors cursor-pointer"
+                    className="flex items-center justify-center w-1/2 gap-2 px-4 py-2 bg-gray-100 border border-gray-300 text-gray-800 rounded-lg hover:bg-neutral-200 transition-colors cursor-pointer"
                   >
                     <X size={16} />
                     Cancel

@@ -130,18 +130,18 @@ export default function Projects() {
     <AppLayout>
       <div className="p-8 space-y-4">
         <h1 className="text-2xl font-bold">Project Management</h1>
-        <div className="mt-6 flex w-full justify-between items-center">
+        <div className="mt-6 w-full flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
           <Input
             variant="search"
             placeholder="Search projects..."
-            className="w-2xl"
+            className="w-full md:w-2/3"
             value={searchTerm}
             onChange={handleSearchChange}
           />
 
           <button
             onClick={handleAddProject}
-            className="px-6 py-3 bg-sky-800 text-white rounded-full hover:bg-sky-900 transition-colors inline-flex items-center gap-2 cursor-pointer uppercase font-semibold"
+            className="px-6 py-3 bg-sky-800 text-white rounded-full hover:bg-sky-900 transition-colors inline-flex justify-center items-center gap-2 cursor-pointer uppercase font-semibold"
           >
             <FilePlus2 size={20} />
             Add Project
@@ -151,9 +151,9 @@ export default function Projects() {
           <div className="w-full rounded-lg border-1 overflow-hidden">
             <div className="grid grid-cols-20 px-4 py-2 bg-neutral-200 text-sm font-medium uppercase">
               <div className="col-span-2">ID</div>
-              <div className="col-span-8">Title</div>
-              <div className="col-span-3">Status</div>
-              <div className="col-span-3">Members</div>
+              <div className="col-span-14 md:col-span-8">Title</div>
+              <div className="col-span-3 hidden md:block">Status</div>
+              <div className="col-span-3 hidden md:block">Members</div>
               <div className="col-span-4 text-end">Actions</div>
             </div>
             {filteredProjects.length === 0 ? (
@@ -169,8 +169,10 @@ export default function Projects() {
                   } items-center`}
                 >
                   <div className="col-span-2">{project.id}</div>
-                  <div className="col-span-8">{project.title}</div>
-                  <div className="col-span-3">
+                  <div className="col-span-14 md:col-span-8">
+                    {project.title}
+                  </div>
+                  <div className="col-span-3 hidden md:block">
                     <span
                       className={`px-2 py-1 rounded-full text-xs ${
                         project.status === "completed"
@@ -183,7 +185,7 @@ export default function Projects() {
                       {project.status.replace("_", " ")}
                     </span>
                   </div>
-                  <div className="col-span-3">
+                  <div className="col-span-3 hidden md:block">
                     <span className="bg-violet-100 text-violet-800 px-2 py-1 rounded-full text-xs">
                       {project.users.length}{" "}
                       {project.users.length === 1 ? "member" : "members"}

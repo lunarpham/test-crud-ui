@@ -255,11 +255,11 @@ export default function ProjectFormModal({
           </div>
         )}
 
-        <div className="flex justify-end gap-3 pt-4">
+        <div className="flex flex-col md:flex-row md:justify-end gap-3 pt-4">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors inline-flex items-center gap-2 cursor-pointer"
+            className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors inline-flex items-center justify-center gap-2 cursor-pointer"
           >
             <X size={16} />
             Cancel
@@ -267,7 +267,7 @@ export default function ProjectFormModal({
           <button
             type="submit"
             disabled={isLoading}
-            className="px-4 py-2 bg-sky-800 text-white rounded-lg hover:bg-sky-900 transition-colors disabled:bg-violet-400 inline-flex items-center gap-2 cursor-pointer"
+            className="px-4 py-2 bg-sky-800 text-white rounded-lg hover:bg-sky-900 transition-colors disabled:bg-violet-400 inline-flex items-center justify-center gap-2 cursor-pointer"
           >
             <Check size={16} />
             {isLoading

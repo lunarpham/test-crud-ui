@@ -1,14 +1,30 @@
-import React, { useState } from "react";
+import React from "react";
 import { Constants } from "~/lib/constants";
 import { Link, useLocation } from "react-router";
-import { User, Users, SquareChartGantt, LayoutDashboard } from "lucide-react";
+import {
+  User,
+  Users,
+  SquareChartGantt,
+  LayoutDashboard,
+  X,
+} from "lucide-react";
 import { useAuthContext } from "~/lib/contexts/authContext";
 
 interface SidebarProps {
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
   className?: string;
+  isMobileOpen?: boolean;
+  onMobileClose?: () => void;
 }
 
-export default function Sidebar({ className = "" }: SidebarProps) {
+export default function Sidebar({
+  isCollapsed = false,
+  onToggleCollapse = () => {},
+  className = "",
+  isMobileOpen = false,
+  onMobileClose = () => {},
+}: SidebarProps) {
   const location = useLocation();
   const { user } = useAuthContext();
 
@@ -30,45 +46,73 @@ export default function Sidebar({ className = "" }: SidebarProps) {
     },
   ];
 
+  const handleNavClick = () => {
+    // Close mobile sidebar when navigation item is clicked
+    onMobileClose();
+  };
+
   return (
-    <aside
-      className={`fixed left-0 top-0 h-screen p-4 flex flex-col justify-between bg-white border-r border-gray-200 transition-all duration-300 w-64 ${className}`}
+    <div
+      className={`
+        h-screen flex flex-col justify-between fixed top-0 left-0 p-4 w-64 
+        bg-white border-r border-gray-200 transition-transform duration-300 z-50
+        ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
+        md:translate-x-0
+        ${className}
+      `}
     >
       <div>
-        <h1 className="p-4 font-bold text-indigo-900">API Manager</h1>
-        <div className="space-y-2 w-full">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="font-bold text-xl text-indigo-900">API Manager</h1>
+          <button
+            className="text-gray-500 hover:text-gray-700 transition-colors md:hidden"
+            onClick={onMobileClose}
+          >
+            <X size={24} />
+          </button>
+        </div>
+
+        <nav className="space-y-2">
           {navItems.map((item) => (
             <Link
               key={item.label}
               to={item.to}
-              className={`flex items-center gap-2 py-3 px-4 rounded-full transition-colors ${
-                location.pathname === item.to
-                  ? "bg-blue-100 text-blue-600"
-                  : "text-gray-700 hover:bg-gray-200"
-              }`}
+              onClick={handleNavClick}
+              className={`
+                flex items-center gap-3 py-3 px-4 rounded-full transition-colors
+                ${
+                  location.pathname === item.to
+                    ? "bg-blue-100 text-blue-600 font-medium"
+                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                }
+              `}
             >
               {item.icon}
               <span>{item.label}</span>
             </Link>
           ))}
-        </div>
+        </nav>
       </div>
-      <div className="bottom">
+
+      <div className="border-t border-gray-200 pt-4">
         <Link
           to={Constants.Routes.PROFILE()}
-          className="flex items-center gap-2 py-3 px-4 bg-gray-100 rounded-full cursor-pointer"
+          onClick={handleNavClick}
+          className="flex items-center gap-3 py-3 px-4 bg-gray-50 rounded-full hover:bg-gray-100 transition-colors"
         >
           <div className="w-10 h-10 flex items-center justify-center bg-gray-200 rounded-full">
-            <User size={24} className="text-gray-500" />
+            <User size={20} className="text-gray-600" />
           </div>
-          <div className="text-xs">
-            <p className="font-semibold">{user?.name || "Guest"}</p>
-            <p className="text-gray-500">
+          <div className="flex-1 min-w-0">
+            <p className="font-medium text-sm text-gray-900 truncate">
+              {user?.name || "Guest"}
+            </p>
+            <p className="text-xs text-gray-500 truncate">
               {user?.email || "guest@example.com"}
             </p>
           </div>
         </Link>
       </div>
-    </aside>
+    </div>
   );
 }

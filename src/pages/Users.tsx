@@ -6,6 +6,7 @@ import ConfirmationModal from "~/components/layout/ConfirmModal";
 import { handleApiError } from "~/lib/utils/errorHandler";
 import { Pencil, Trash2, UserRoundPlus } from "lucide-react";
 import { useUser } from "~/lib/hooks/useUser";
+import { useAuth } from "~/lib/hooks/useAuth";
 import { useState } from "react";
 import { User } from "~/lib/types/userTypes";
 import { useSearch } from "~/lib/hooks/useSearch";
@@ -21,6 +22,7 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Users() {
+  const { user: currentUser } = useAuth();
   const { users, loading, deleteUser, createUser, updateUser, getUsers } =
     useUser();
   const {
@@ -30,6 +32,10 @@ export default function Users() {
   } = useSearch(users, {
     searchableFields: ["name", "email"],
   });
+
+  const displayUsers = filteredUsers.filter(
+    (user) => user.id !== currentUser?.id
+  );
 
   // Modal states
   const [showUserModal, setShowUserModal] = useState(false);
@@ -119,18 +125,18 @@ export default function Users() {
     <AppLayout>
       <div className="p-8 space-y-4">
         <h1 className="text-2xl font-bold">User Management</h1>
-        <div className="mt-6 flex w-full justify-between items-center">
+        <div className="mt-6 w-full flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
           <Input
             variant="search"
             placeholder="Search users..."
-            className="w-2xl"
+            className="w-full md:w-2/3"
             value={searchTerm}
             onChange={handleSearchChange}
           />
 
           <button
             onClick={handleAddUser}
-            className="px-6 py-3 bg-sky-800 text-white rounded-full hover:bg-sky-900 transition-colors inline-flex items-center gap-2 cursor-pointer uppercase font-semibold"
+            className="px-6 py-3 bg-sky-800 text-white rounded-full hover:bg-sky-900 transition-colors inline-flex justify-center items-center gap-2 cursor-pointer uppercase font-semibold"
           >
             <UserRoundPlus size={20} />
             Add User
@@ -140,17 +146,17 @@ export default function Users() {
           <div className="w-full rounded-lg border-1 overflow-hidden">
             <div className="grid grid-cols-20 px-4 py-2 bg-neutral-200 text-sm font-medium uppercase">
               <div className="col-span-2">ID</div>
-              <div className="col-span-5">Name</div>
-              <div className="col-span-7">Email</div>
-              <div className="col-span-2">Age</div>
+              <div className="col-span-14 md:col-span-5">Name</div>
+              <div className="col-span-7 hidden md:block">Email</div>
+              <div className="col-span-2 hidden md:block">Age</div>
               <div className="col-span-4 text-end">Actions</div>
             </div>
-            {filteredUsers.length === 0 ? (
+            {displayUsers.length === 0 ? (
               <div className="px-4 py-8 text-center text-gray-500">
                 No users found
               </div>
             ) : (
-              filteredUsers.map((user, index) => (
+              displayUsers.map((user, index) => (
                 <div
                   key={user.id}
                   className={`grid grid-cols-20 px-4 py-2 ${
@@ -158,9 +164,11 @@ export default function Users() {
                   } items-center`}
                 >
                   <div className="col-span-2">{user.id}</div>
-                  <div className="col-span-5">{user.name}</div>
-                  <div className="col-span-7">{user.email}</div>
-                  <div className="col-span-2">{user.age || "N/A"}</div>
+                  <div className="col-span-14 md:col-span-5">{user.name}</div>
+                  <div className="col-span-7 hidden md:block">{user.email}</div>
+                  <div className="col-span-2 hidden md:block">
+                    {user.age || "N/A"}
+                  </div>
                   <div className="col-span-4 flex items-center justify-end gap-2">
                     <button
                       onClick={() => handleEditUser(user)}
