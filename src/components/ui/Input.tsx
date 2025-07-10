@@ -21,15 +21,65 @@ type InputVariant =
   | "phone"
   | "url";
 
+// Combined configuration type for each variant
+type VariantConfig = {
+  type: string;
+  placeholder: string;
+  icon: (props: { size: number; className: string }) => React.ReactNode;
+};
+
 interface InputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
   variant?: InputVariant;
   label?: string;
-  // Change this line to accept either a component type or ReactNode
   icon?: React.ComponentType<any> | ReactNode;
   error?: string;
   containerClassName?: string;
 }
+
+// Unified configuration map for all variants
+const variantConfigs: Record<InputVariant, VariantConfig> = {
+  default: {
+    type: "text",
+    placeholder: "",
+    icon: () => null,
+  },
+  email: {
+    type: "email",
+    placeholder: "Email",
+    icon: (props) => <Mail {...props} />,
+  },
+  password: {
+    type: "password",
+    placeholder: "Password",
+    icon: (props) => <Lock {...props} />,
+  },
+  search: {
+    type: "search",
+    placeholder: "Search...",
+    icon: (props) => <Search {...props} />,
+  },
+  name: {
+    type: "text",
+    placeholder: "Name",
+    icon: (props) => <User {...props} />,
+  },
+  age: {
+    type: "number",
+    placeholder: "Age",
+    icon: (props) => <Calendar {...props} />,
+  },
+  phone: {
+    type: "tel",
+    placeholder: "Phone number",
+    icon: (props) => <Phone {...props} />,
+  },
+  url: {
+    type: "url",
+    placeholder: "Website URL",
+    icon: (props) => <Globe {...props} />,
+  },
+};
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   (
@@ -46,71 +96,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref
   ) => {
-    // Determine input type based on variant
-    const getInputType = (variant: InputVariant): string => {
-      switch (variant) {
-        case "email":
-          return "email";
-        case "password":
-          return "password";
-        case "age":
-          return "number";
-        case "phone":
-          return "tel";
-        case "url":
-          return "url";
-        case "search":
-          return "search";
-        default:
-          return "text";
-      }
-    };
-
-    // Determine default icon based on variant
-    const getDefaultIcon = (variant: InputVariant): React.ReactNode => {
-      const iconProps = { size: 20, className: "text-neutral-700" };
-
-      switch (variant) {
-        case "email":
-          return <Mail {...iconProps} />;
-        case "password":
-          return <Lock {...iconProps} />;
-        case "search":
-          return <Search {...iconProps} />;
-        case "name":
-          return <User {...iconProps} />;
-        case "age":
-          return <Calendar {...iconProps} />;
-        case "phone":
-          return <Phone {...iconProps} />;
-        case "url":
-          return <Globe {...iconProps} />;
-        default:
-          return null;
-      }
-    };
-
-    // Get default placeholder based on variant
-    const getDefaultPlaceholder = (variant: InputVariant): string => {
-      switch (variant) {
-        case "email":
-          return "Email";
-        case "password":
-          return "Password";
-        case "search":
-          return "Search...";
-        case "name":
-          return "Name";
-        case "age":
-          return "Age";
-        case "phone":
-          return "Phone number";
-        case "url":
-          return "Website URL";
-        default:
-          return "";
-      }
-    };
+    const config = variantConfigs[variant];
 
     // Properly handle the icon, whether it's a component or a pre-rendered element
     let iconToRender: ReactNode = null;
@@ -122,7 +108,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         iconToRender = icon;
       }
     } else {
-      iconToRender = getDefaultIcon(variant);
+      // Use the icon from config
+      const iconProps = { size: 20, className: "text-neutral-700" };
+      iconToRender = config.icon(iconProps);
     }
 
     // Generate input ID if not provided
@@ -153,8 +141,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               ref={ref}
               id={inputId}
               name={name}
-              type={getInputType(variant)}
-              placeholder={props.placeholder || getDefaultPlaceholder(variant)}
+              type={config.type}
+              placeholder={props.placeholder || config.placeholder}
               className={`px-4 py-3 w-full h-full bg-transparent focus:outline-none ${className}`}
               {...props}
             />

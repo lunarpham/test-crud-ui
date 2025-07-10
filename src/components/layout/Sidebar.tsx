@@ -11,16 +11,12 @@ import {
 import { useAuthContext } from "~/lib/contexts/authContext";
 
 interface SidebarProps {
-  isCollapsed?: boolean;
-  onToggleCollapse?: () => void;
   className?: string;
   isMobileOpen?: boolean;
   onMobileClose?: () => void;
 }
 
 export default function Sidebar({
-  isCollapsed = false,
-  onToggleCollapse = () => {},
   className = "",
   isMobileOpen = false,
   onMobileClose = () => {},

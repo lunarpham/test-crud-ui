@@ -44,17 +44,17 @@ export default function UserFormModal({
     if (isOpen) {
       if (user) {
         setFormData({
-          name: user.name || "", // Fixed: removed extra space
+          name: user.name || "",
           email: user.email || "",
           age: user.age,
-          password: "", // Don't pre-fill password for editing
+          password: "",
         });
       } else {
         setFormData({
           name: "",
           email: "",
           age: undefined,
-          password: "mypassword123", // Default password for new users
+          password: "mypassword123",
         });
       }
       setErrors({});
